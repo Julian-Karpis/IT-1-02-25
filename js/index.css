@@ -1,0 +1,17 @@
+#board {
+ 
+    background-color: black;
+    border-top: 5px solid skyblue ;
+    border-bottom: 5px solid skyblue ;
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+
+}
+
+body {
+    text-align: center;
+}
+
+hr {
+    width: 50px;
+}
