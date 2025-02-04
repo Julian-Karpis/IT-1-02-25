@@ -97,40 +97,40 @@ function filterZero(row) { // filterer ut null verdier
 }
 
 function slide(row) {   //filterer ut null verdier
-    row = filterZero(row)
+    row = filterZero(row)       // setter row til den nye arrayen
 
-    for (let i = 0; i < row.length - 1; i++) {
-        if (row[i] == row[i + 1]) {
-            row[i] *= 2
-            row[i + 1] = 0
-            score += row[i]
+    for (let i = 0; i < row.length - 1; i++) { // sjekker om divene det er like
+        if (row[i] == row[i + 1]) { // dersom de er like
+            row[i] *= 2             // ganger dem med 2
+            row[i + 1] = 0          // setter neste til 0
+            score += row[i]         // legger til poeng
         }
     }
-    row = filterZero(row); //filterer ut null verdier igjen
-    while (row.length < columns) {
-        row.push(0)
+    row = filterZero(row);          //filterer ut null verdier igjen
+    while (row.length < columns) { // dersom arrayen er mindre enn antall kolonner
+        row.push(0)                 //legger til 0 i arrayen
     }
-    return row
+    return row                         // returnerer arrayen i funksjonen
 }
 
 
 
-function slideLeft() {
-    for (let r = 0; r < rows; r++) {
-        let row = board[r];
+function slideLeft() { // funkjson for å slide til venstre
+    for (let r = 0; r < rows; r++) { //så lenge r er mindre enn antall rader
+        let row = board[r];          // lager en variabel row og setter den til board[r]
 
 
         row = slide(row); // Slide the row to the left and merge
-        board[r] = row;
+        board[r] = row;     //opptaderer board[r] til row
 
-        for (let c = 0; c < columns; c++) {
-            let tile = document.getElementById(r.toString() + "-" + c.toString());
+        for (let c = 0; c < columns; c++) { // så lenge c er mindre enn antall kolonner
+            let tile = document.getElementById(r.toString() + "-" + c.toString()); // lager en variabel tile og setter den til r og c
             let num = board[r][c];
-            updateTile(tile, num);
+            updateTile(tile, num); //opptaderer tile til board[r][c]
         }
     }
 }
-function slideRight() {
+function slideRight() {  // samme funksjon som slideLeft, bare at den er reversert slik at den går motsatt vei til høyre
     for (let r = 0; r < rows; r++) {
         let row = board[r];
         row.reverse();
@@ -145,19 +145,19 @@ function slideRight() {
     }
 }
 
-function slideUp() {
-  for (let c = 0; c < columns; c++) {
-    let row = [board[0][c], board[1][c], board[2][c], board[3][c]];
-    row = slide(row);
-    board[0][c] = row[0];
+function slideUp() {        //funksjon for å slide opp
+  for (let c = 0; c < columns; c++) { // så lenge c er mindre enn antall kolonner
+    let row = [board[0][c], board[1][c], board[2][c], board[3][c]]; //la row til å være en array med de fire første kolonnene
+    row = slide(row); //kaller på funksjonen slide og setter row til å være det samme som returnen til funksjonen
+    board[0][c] = row[0]; //setter board[0][c] til å være lik row[0] osv.
     board[1][c] = row[1];
     board[2][c] = row[2];
     board[3][c] = row[3];
 
-    for (let r = 0; r < rows; r++) {
-        board [r][c] = row[r];
+    for (let r = 0; r < rows; r++) { // så lenge r er mindre enn antall rader
+        board [r][c] = row[r]; // setter board[r][c] til å være lik row[r]
         let tile = document.getElementById(r.toString() + "-" + c.toString());
-        let num = board[r][c];
+        let num = board[r][c]; //
         updateTile(tile, num);
     }
   }
@@ -181,4 +181,27 @@ function slideUp() {
           updateTile(tile, num);
       }
     }
+    }
+
+
+    function gameWin() {
+      for (let r = 0; r < rows; r++) {
+          for (let c = 0; c < columns; c++) {
+              if (board[r][c] == 2048) {
+                  return true;
+              }
+          }
+      }
+      return false;
+    }
+
+    function gameLost() {
+      for (let r = 0; r < rows; r++) {
+          for (let c = 0; c < columns; c++) {
+              if (board[r][c] == 0) {
+                  return false;
+              }
+    }
+
+}
     }
