@@ -4,19 +4,19 @@ let score = 0
 let rows = 4
 let columns = 4
 
-window.onload = function() {
+window.onload = function() { //når siden laster inn "starter" spillet
     setGame()
 }
 
-function setGame() {
+function setGame() { // funksjon for å starte spillet
     board = [
-        [0, 0, 0, 0],
+        [0, 0, 0, 0], //Standard brettet for 4x4 i array form
         [0, 0, 0, 0],
         [0, 0, 0, 0],
         [0, 0, 0, 0]
 
     ]
-    for (let r = 0; r < rows; r++) {
+    for (let r = 0; r < rows; r++) { //Looper gjennom arrayet og lager div elementer for hver av de 16 plassene
         for (let c = 0; c < columns; c++) {
             let tile = document.createElement("div")
             tile.id = r.toString() + "-" + c.toString()
@@ -26,7 +26,7 @@ function setGame() {
         }
     }
 
-    document.addEventListener("keyup", (e) => {
+    document.addEventListener("keyup", (e) => { //setter event listener på keyup for å kunne bruke piltaster
         if (e.code == "ArrowLeft") {
             slideLeft();
             setTwo();
@@ -40,14 +40,14 @@ function setGame() {
             slideDown();
             setTwo();
         }
-        document.getElementById("score").innerText = score;
+        document.getElementById("score").innerText = score; //Oppdaterer scoren
 
     })
-    setTwo();
+    setTwo(); //setter 2 diven i starten i en tilfeldig plass
     setTwo();
 }
 
-function hasEmptyTile() {
+function hasEmptyTile() { //sjekker om det er tomme plasser på brettet
     for (let r = 0; r < rows; r++) {
         for (let c = 0; c < columns; c++) {
             if (board[r][c] == 0) {
@@ -55,44 +55,44 @@ function hasEmptyTile() {
             }
         }
     }
-    return false;
+    return false; //returnerer false hvis det ikke er tomme plasser
 }
 
-function setTwo() {
+function setTwo() { // setter 2diven i en tilfeldig plass
 if(!hasEmptyTile()) {
     return;
 }
 
     let found = false
-    while (!found) {
+    while (!found) { //while løkke som fortsetter til den har funnet en tom plass
         let r = Math.floor(Math.random() * rows)
         let c = Math.floor(Math.random() * columns)
 
-        if (board[r][c] == 0) {
-            board[r][c] = 2
-            let title = document.getElementById(r.toString() + "-" + c.toString())
-            title.innerText = 2
-            title.classList.add("x2")
-            found = true
+        if (board[r][c] == 0) { // hvis plassen er tom
+            board[r][c] = 2  //setter 2 på plassen
+            let title = document.getElementById(r.toString() + "-" + c.toString()) // referer til riktig div
+            title.innerText = 2 // bytter om teksten til 2 
+            title.classList.add("x2") // legger til riktig klasse
+            found = true 
         }
     }
 }
 
-function updateTile(tile, num) {
+function updateTile(tile, num) { // oppdaterer en div
     tile.innerText = ""
     tile.classList.value = ""; //clearer classlisten verdien
     tile.classList.add("tile")
-    if (num > 0) {
+    if (num > 0) { //dersom tallet er mindre enn null
         tile.innerText = num
-        if (num <= 4096) {
-            tile.classList.add("x" + num.toString())
-        } else {
+        if (num <= 4096) { // dersom tallet er mindre enn 4096
+            tile.classList.add("x" + num.toString()) // legger til riktig klasse
+        } else { // dersom tallet er større enn 4096
             tile.classList.add("x8192")
         } 
     }
 }
 
-function filterZero(row) {
+function filterZero(row) { // filterer ut null verdier
     return row.filter(num => num != 0) // lager ny array
 }
 
@@ -116,8 +116,6 @@ function slide(row) {   //filterer ut null verdier
 
 
 function slideLeft() {
-
-
     for (let r = 0; r < rows; r++) {
         let row = board[r];
 
