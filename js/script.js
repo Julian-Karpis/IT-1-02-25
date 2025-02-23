@@ -40,6 +40,49 @@ let ball = {
 let player1Score = 0;
 let player2Score = 0;
 
+let gameStarted = false;
+let ballSpeed = 1; 
+
+document.addEventListener("DOMContentLoaded", function() {
+    const menu = document.createElement("div");
+    menu.id = "menu";
+
+    const title = document.createElement("h1");
+    title.innerText = "PONG";
+   
+
+    const difficultyText = document.createElement("p");
+    difficultyText.innerText = "Choose difficulty:";
+ 
+
+    const difficultyButtons = document.createElement("div");
+    const difficulties = { "Easy": 1, "Medium": 2, "Hard": 3 };
+    let gameStarted = false;
+    let player1Score = 0;
+    let player2Score = 0;
+    const winningScore = 5;
+
+    for (const [label, speed] of Object.entries(difficulties)) {
+        const button = document.createElement("button");
+        button.innerText = label;
+        button.addEventListener("click", function() {
+            ballSpeed = speed;
+            difficultyButtons.style.display = "none";
+            difficultyText.innerText = "Press any key to start";
+            document.addEventListener("keydown", startGame);
+        });
+        difficultyButtons.appendChild(button);
+    }
+
+    
+
+    // Ensure the menu appears before the game starts
+    document.body.appendChild(menu);
+    menu.appendChild(title);
+    menu.appendChild(difficultyText);
+    menu.appendChild(difficultyButtons);
+});
+
 
 window.onload = function () {
     board = document.getElementById("board");
@@ -47,6 +90,7 @@ window.onload = function () {
     board.height = boardHeight;
     context = board.getContext("2d");
 
+    
     // tegn inn spiller1
     context.fillStyle = "skyblue";
     context.fillRect(player1.x, player1.y, player1.width, player1.height);
@@ -87,6 +131,25 @@ function drawPaddle2(player) {
     // Color 3: 4/10 of the rectangle (last section)
     context.fillStyle = "#404041";
     context.fillRect(player.x, player.y + player.height * 0.53, player.width, player.height * 0.35); 
+
+    document.addEventListener("keydown", startGame);
+}
+
+function startGame() {
+    if (!gameStarted) {
+        gameStarted = true;
+        menu.style.display = "none";
+        initializeBall();
+        document.removeEventListener("keydown", startGame);
+        requestAnimationFrame(update); // Start the game loop
+    }
+}
+
+function initializeBall() {
+    ball.x = boardWidth / 2;
+    ball.y = boardHeight / 2;
+    ball.velocityX = ballSpeed;
+    ball.velocityY = ballSpeed;
 }
 
 function update() {
@@ -113,6 +176,7 @@ context.fillRect(0, boardHeight / 2 - 10, board.width, 5);
         player2.y = nextPlayer2Y;
     }
    
+    if (gameStarted) {
 
     //ball
     context.fillStyle = "white";
@@ -144,6 +208,7 @@ context.fillRect(0, boardHeight / 2 - 10, board.width, 5);
     else if (ball.x + ball.width >= boardWidth) {
         player1Score++;
         resetGame(2);
+    }
     }
 
 
@@ -198,80 +263,7 @@ function resetGame(direction){
         y: boardHeight / 2,
         width: ballWidth,
         height: ballHeight,
-        velocityX: ball.velocityX,
+        velocityX: direction === 1 ? 1 : -1,
         velocityY: ball.velocityY,
     }
 }
-
-
-document.addEventListener("DOMContentLoaded", function() {
-    const menu = document.createElement("div");
-    menu.id = "menu";
-    menu.style.position = "absolute";
-    menu.style.top = "0";
-    menu.style.left = "0";
-    menu.style.width = "100%";
-    menu.style.height = "100%";
-    menu.style.background = "rgba(0, 0, 0, 0.8)";
-    menu.style.display = "flex";
-    menu.style.flexDirection = "column";
-    menu.style.justifyContent = "center";
-    menu.style.alignItems = "center";
-    menu.style.color = "white";
-    menu.style.fontFamily = "Arial, sans-serif";
-
-    const title = document.createElement("h1");
-    title.innerText = "PONG";
-    title.style.marginBottom = "20px";
-
-    const difficultyText = document.createElement("p");
-    difficultyText.innerText = "Choose difficulty:";
-    difficultyText.style.marginBottom = "10px";
-
-    const difficultyButtons = document.createElement("div");
-    const difficulties = { "Easy": 1, "Medium": 2, "Hard": 3 };
-    let ballSpeed = 1;
-    let gameStarted = false;
-    let player1Score = 0;
-    let player2Score = 0;
-    const winningScore = 5;
-
-    for (const [label, speed] of Object.entries(difficulties)) {
-        const button = document.createElement("button");
-        button.innerText = label;
-        button.style.margin = "5px";
-        button.style.padding = "10px 15px";
-        button.style.fontSize = "16px";
-        button.style.cursor = "pointer";
-        button.addEventListener("click", function() {
-            ballSpeed = speed;
-            difficultyButtons.style.display = "none";
-            difficultyText.innerText = "Press any key to start";
-            document.addEventListener("keydown", startGame);
-        });
-        difficultyButtons.appendChild(button);
-    }
-
-    function startGame() {
-        if (!gameStarted) {
-            gameStarted = true;
-            menu.style.display = "none";
-            document.removeEventListener("keydown", startGame);
-            initializeBall();
-            requestAnimationFrame(update); // Start the game loop
-        }
-    }
-
-    function initializeBall() {
-        ball.x = boardWidth / 2;
-        ball.y = boardHeight / 2;
-        ball.velocityX = ballSpeed;
-        ball.velocityY = ballSpeed;
-    }
-
-    // Ensure the menu appears before the game starts
-    document.body.appendChild(menu);
-    menu.appendChild(title);
-    menu.appendChild(difficultyText);
-    menu.appendChild(difficultyButtons);
-});
