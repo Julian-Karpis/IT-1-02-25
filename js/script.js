@@ -41,7 +41,11 @@ let player1Score = 0;
 let player2Score = 0;
 
 let gameStarted = false;
-let ballSpeed = 1; 
+let ballSpeed = 1;
+
+let gameOver = false;
+//score
+const winningScore = 1;
 
 document.addEventListener("DOMContentLoaded", function() {
     const menu = document.createElement("div");
@@ -49,11 +53,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
     const title = document.createElement("h1");
     title.innerText = "PONG";
-   
 
     const difficultyText = document.createElement("p");
     difficultyText.innerText = "Choose difficulty:";
- 
 
     const difficultyButtons = document.createElement("div");
     const difficulties = { "Easy": 1, "Medium": 2, "Hard": 3 };
@@ -61,20 +63,17 @@ document.addEventListener("DOMContentLoaded", function() {
     let player1Score = 0;
     let player2Score = 0;
     const winningScore = 5;
-
-    for (const [label, speed] of Object.entries(difficulties)) {
+    for (let label in difficulties) {
         const button = document.createElement("button");
         button.innerText = label;
-        button.addEventListener("click", function() {
-            ballSpeed = speed;
+        button.onclick = () => {
+            ballSpeed = difficulties[label];
             difficultyButtons.style.display = "none";
             difficultyText.innerText = "Press any key to start";
             document.addEventListener("keydown", startGame);
-        });
+        };
         difficultyButtons.appendChild(button);
     }
-
-    
 
     // Ensure the menu appears before the game starts
     document.body.appendChild(menu);
@@ -90,7 +89,6 @@ window.onload = function () {
     board.height = boardHeight;
     context = board.getContext("2d");
 
-    
     // tegn inn spiller1
     context.fillStyle = "skyblue";
     context.fillRect(player1.x, player1.y, player1.width, player1.height);
@@ -99,38 +97,36 @@ window.onload = function () {
 
     // tegn inn spiller2
     document.addEventListener("keyup", movePlayer)
-
-
 }
 
 function drawPaddle1(player) {
     // Color 1: 5/10 of the rectangle (first half)
     context.fillStyle = "  #F55050 ";
-   
-  
-    context.fillRect(player.x, player.y, player.width, player.height * 0.5); 
+
+
+    context.fillRect(player.x, player.y, player.width, player.height * 0.5);
 
     // Color 2: 1/10 of the rectangle (middle section)
     context.fillStyle = "white";
-    context.fillRect(player.x, player.y + player.height * 0.5, player.width, player.height * 0.03); 
+    context.fillRect(player.x, player.y + player.height * 0.5, player.width, player.height * 0.03);
 
     // Color 3: 4/10 of the rectangle (last section)
     context.fillStyle = "#404041";
-    context.fillRect(player.x, player.y + player.height * 0.53, player.width, player.height * 0.35); 
+    context.fillRect(player.x, player.y + player.height * 0.53, player.width, player.height * 0.35);
 }
 
 function drawPaddle2(player) {
     // Color 1: 5/10 of the rectangle (first half)
     context.fillStyle = "#FBD900";
-    context.fillRect(player.x, player.y, player.width, player.height * 0.5); 
+    context.fillRect(player.x, player.y, player.width, player.height * 0.5);
 
     // Color 2: 1/10 of the rectangle (middle section)
     context.fillStyle = "white";
-    context.fillRect(player.x, player.y + player.height * 0.5, player.width, player.height * 0.03); 
+    context.fillRect(player.x, player.y + player.height * 0.5, player.width, player.height * 0.03);
 
     // Color 3: 4/10 of the rectangle (last section)
     context.fillStyle = "#404041";
-    context.fillRect(player.x, player.y + player.height * 0.53, player.width, player.height * 0.35); 
+    context.fillRect(player.x, player.y + player.height * 0.53, player.width, player.height * 0.35);
 
     document.addEventListener("keydown", startGame);
 }
@@ -153,11 +149,13 @@ function initializeBall() {
 }
 
 function update() {
+
+    if (gameOver) return;
     requestAnimationFrame(update);
     context.clearRect(0, 0, boardWidth, boardHeight);
 
     context.fillStyle = "white";
-context.fillRect(0, boardHeight / 2 - 10, board.width, 5);
+    context.fillRect(0, boardHeight / 2 - 10, board.width, 5);
 
     drawPaddle1(player1);
     drawPaddle2(player2);
@@ -169,63 +167,64 @@ context.fillRect(0, boardHeight / 2 - 10, board.width, 5);
     }
 
 
-    
+
     //player2.y += player2.velocityY;
     let nextPlayer2Y = player2.y + player2.velocityY;
     if (!outOfBounds(nextPlayer2Y)) {
         player2.y = nextPlayer2Y;
     }
-   
+
     if (gameStarted) {
 
-    //ball
-    context.fillStyle = "white";
-    ball.x += ball.velocityX;
-    ball.y += ball.velocityY;
-    context.fillRect(ball.x, ball.y, ball.width, ball.height);
+        //ball
+        context.fillStyle = "white";
+        ball.x += ball.velocityX;
+        ball.y += ball.velocityY;
+        context.fillRect(ball.x, ball.y, ball.width, ball.height);
 
-    //dersom ballen treffer 
-    if (ball.y <= 0 || (ball.y + ball.height) >= boardHeight) {
-        ball.velocityY *= -1 //reverser retning
-    }
-
-    //sprett ballen tilbake
-    if(detectCollision(ball, player1)) {
-        if (ball.x <= player1.x + player1.width) {
-            ball.velocityX *= -1;
+        //dersom ballen treffer 
+        if (ball.y <= 0 || (ball.y + ball.height) >= boardHeight) {
+            ball.velocityY *= -1 //reverser retning
         }
-    } else if (detectCollision(ball, player2)) {
-        if (ball.x + ball.width >= player2.x) {
-            ball.velocityX *= -1;
-        }
-    }
 
-    //game over 
-    if (ball.x <= 0) {
-        player2Score++;
-        resetGame(1);
-    } 
-    else if (ball.x + ball.width >= boardWidth) {
-        player1Score++;
-        resetGame(2);
-    }
+        //sprett ballen tilbake
+        if (detectCollision(ball, player1)) {
+            if (ball.x <= player1.x + player1.width) {
+                ball.velocityX *= -1;
+            }
+        } else if (detectCollision(ball, player2)) {
+            if (ball.x + ball.width >= player2.x) {
+                ball.velocityX *= -1;
+            }
+        }
+
+        //game over 
+        if (ball.x <= 0) {
+            player2Score++;
+            resetGame(1);
+        }
+        else if (ball.x + ball.width >= boardWidth) {
+            player1Score++;
+            resetGame(2);
+        }
+        checkGameOver();
     }
 
 
     //score 
     context.font = "45px sans-serif"
-    context.fillText(player1Score, boardWidth/5 , 45);
-    context.fillText(player2Score, boardWidth*4/5 - 45, 45);
+    context.fillText(player1Score, boardWidth / 5, 45);
+    context.fillText(player2Score, boardWidth * 4 / 5 - 45, 45);
 
     //draw 
     const netHeight = boardHeight;
     const netWidth = 5;
-    const netGap = 15; 
+    const netGap = 15;
     context.fillStyle = "white";
 
     for (let i = 0; i < netHeight; i += netGap * 2) {
-        context.fillRect(boardWidth/2 - netWidth/2, i, netWidth, netGap)
-}
+        context.fillRect(boardWidth / 2 - netWidth / 2, i, netWidth, netGap)
+    }
 
 
     function outOfBounds(yPosition) {
@@ -234,31 +233,31 @@ context.fillRect(0, boardHeight / 2 - 10, board.width, 5);
 
 }
 
-    function movePlayer(e) {
-        if (e.code == "KeyW") {
-            player1.velocityY = - 3;
-        }
-        else if (e.code == "KeyS") {
-            player1.velocityY = 3;
-        }
-
-        if (e.code == "ArrowUp") {
-            player2.velocityY = - 3;
-        }
-        else if (e.code == "ArrowDown") {
-            player2.velocityY = 3;
-        }
+function movePlayer(e) {
+    if (e.code == "KeyW") {
+        player1.velocityY = - 3;
+    }
+    else if (e.code == "KeyS") {
+        player1.velocityY = 3;
     }
 
-    function detectCollision(a, b) {
-        return a.x < b.x + b.width &&
-            a.x + a.width > b.x &&
-            a.y < b.y + b.height &&
-            a.y + a.height > b.y;
+    if (e.code == "ArrowUp") {
+        player2.velocityY = - 3;
+    }
+    else if (e.code == "ArrowDown") {
+        player2.velocityY = 3;
+    }
 }
 
-function resetGame(direction){
-     ball = {
+function detectCollision(a, b) {
+    return a.x < b.x + b.width &&
+        a.x + a.width > b.x &&
+        a.y < b.y + b.height &&
+        a.y + a.height > b.y;
+}
+
+function resetGame(direction) {
+    ball = {
         x: boardWidth / 2,
         y: boardHeight / 2,
         width: ballWidth,
@@ -266,4 +265,30 @@ function resetGame(direction){
         velocityX: direction === 1 ? 1 : -1,
         velocityY: ball.velocityY,
     }
+}
+
+function checkGameOver() {
+    if (player1Score >= winningScore || player2Score >= winningScore) {
+        gameOver = true;
+        showGameOverScreen();
+    
+}
+}
+
+function showGameOverScreen() {
+    const gameOverText = document.createElement("div");
+    gameOverText.id = "game-over"
+    gameOverText.innerText = `Game Over! ${player1Score > player2Score ? 'Spiller 1 vant!' : 'Spiller 2 vant!'}`;
+    document.body.appendChild(gameOverText);
+
+    const restartButton = document.createElement("button");
+    restartButton.id = "restart-button";
+    restartButton.innerText = "Tilbake til meny";
+    restartButton.onclick = restartGame;
+    document.body.appendChild(restartButton);
+}
+
+function restartGame() {
+    //refresher siden 
+    location.reload();
 }
