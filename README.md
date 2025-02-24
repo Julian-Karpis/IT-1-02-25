@@ -1,19 +1,7 @@
 # About
-
-Pong...
+Pong - singleplayer vs (AI) or multiplayer
 
 ## Usage
-
-### Install
-
-```bash
-$ pip install -r requirements.txt
-```
-
-### Run
-
-```bash
-$ python main.py
-```
+Play at https://julian-karpis.github.io/IT-1-02-25/
 
 

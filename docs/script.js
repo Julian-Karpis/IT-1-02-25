@@ -39,10 +39,8 @@ let ball = {
 
 let player1Score = 0;
 let player2Score = 0;
-
 let gameStarted = false;
 let ballSpeed = 1;
-
 let gameOver = false;
 //score
 const winningScore = 1;
@@ -51,8 +49,7 @@ const winningScore = 1;
 let gameMode = "PvE"
 
 
-
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     const menu = document.createElement("div");
     menu.id = "menu";
 
@@ -60,7 +57,7 @@ document.addEventListener("DOMContentLoaded", function() {
     title.innerText = "PONG";
 
     const modeText = document.createElement("p");
-    modeText.innerText = "Choose game mode:"; 
+    modeText.innerText = "Choose game mode:";
 
     const modeButtons = document.createElement("div");
     const modes = { "PvE": "Singleplayer", "PvP": "Multiplayer" };
@@ -69,7 +66,7 @@ document.addEventListener("DOMContentLoaded", function() {
     for (let mode in modes) {
         const button = document.createElement("button");
         button.innerText = modes[mode];
-        button.onclick = function() {
+        button.onclick = function () {
             setGameMode(mode);
             menu.style.display = "block";
             modeButtons.style.display = "none";
@@ -77,7 +74,6 @@ document.addEventListener("DOMContentLoaded", function() {
         };
         modeButtons.appendChild(button);
     }
-
 
     const difficultyText = document.createElement("p");
     difficultyText.innerText = "Choose difficulty:";
@@ -90,7 +86,7 @@ document.addEventListener("DOMContentLoaded", function() {
     let player1Score = 0;
     let player2Score = 0;
     const winningScore = 5;
-    
+
     for (let label in difficulties) {
         const button = document.createElement("button");
         button.innerText = label;
@@ -110,13 +106,13 @@ document.addEventListener("DOMContentLoaded", function() {
     menu.appendChild(modeButtons);
     menu.appendChild(difficultyText);
     menu.appendChild(difficultyButtons);
-    
+
 });
 
 function showDifficultySelection() {
     const difficultySelection = document.getElementById("difficultySelection");
     difficultySelection.style.display = "block";
-    
+
 }
 
 function setGameMode(mode) {
@@ -190,7 +186,6 @@ function initializeBall() {
 }
 
 function update() {
-
     if (gameOver) return;
     requestAnimationFrame(update);
     context.clearRect(0, 0, boardWidth, boardHeight);
@@ -207,7 +202,6 @@ function update() {
         player1.y = nextPlayerY;
     }
 
-
     //sjekke spillemodus 
     if (gameMode === "PvE") {
         aiPaddleMovement();
@@ -219,9 +213,7 @@ function update() {
     }
 
     //player2.y += player2.velocityY;
-
     if (gameStarted) {
-
         //ball
         context.fillStyle = "white";
         ball.x += ball.velocityX;
@@ -255,7 +247,6 @@ function update() {
         }
         checkGameOver();
     }
-
 
     //score 
     context.font = "45px sans-serif"
@@ -317,8 +308,8 @@ function checkGameOver() {
     if (player1Score >= winningScore || player2Score >= winningScore) {
         gameOver = true;
         showGameOverScreen();
-    
-}
+
+    }
 }
 
 function showGameOverScreen() {
