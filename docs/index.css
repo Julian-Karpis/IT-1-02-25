@@ -1,0 +1,125 @@
+#board {
+ 
+    background-color: #4EBFAC;
+    border-top: 5px solid  #FFFFFF ;
+    border-bottom: 5px solid  #FFFFFF ;
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+
+}
+
+body {
+    text-align: center;
+    height: 100vh;
+}
+
+hr {
+    width: 50px;
+}
+
+#menu {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, #111, #333); /* modern gradient */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* modern font */
+    box-sizing: border-box;
+    padding: 20px;
+}
+
+h1 {
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 3rem; /* larger, bolder font */
+    letter-spacing: 1px; /* subtle letter spacing */
+}
+
+p {
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+    line-height: 1.5;
+    opacity: 0.8; /* subtle fade effect */
+}
+
+button {
+    margin: 10px;
+    padding: 12px 20px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    border: none;
+    background-color: #007BFF; /* modern button color */
+    color: white;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease, background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05); /* subtle scaling on hover */
+}
+
+hr {
+    width: 50%;
+    border: none;
+    border-top: 2px solid #fff;
+    margin: 20px 0;
+}
+
+#game-over {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: linear-gradient(45deg, #f06, #ff9a8b); /* soft pink gradient */
+    padding: 40px 50px;
+    border-radius: 20px; /* rounded corners */
+    color: white;
+    text-align: center;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3); /* smooth shadow */
+    opacity: 0.9;
+    max-width: 80%;
+    box-sizing: border-box;
+    animation: fadeIn 1s ease-out;
+}
+
+#game-over h1 {
+    font-size: 3.5rem;
+    margin-bottom: 20px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-shadow: 0 4px 6px rgba(0, 0, 0, 0.4); /* soft glow effect */
+}
+
+#game-over p {
+    font-size: 1.4rem;
+    margin-bottom: 30px;
+    line-height: 1.5;
+    opacity: 0.85;
+}
+
+
+#restart-button {
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 12px 25px;
+    font-size: 1.2rem;
+    background-color: #28a745; /* fresh button color */
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+}
+
+#restart-button:hover {
+    background-color: #218838;
+
+}
